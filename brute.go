@@ -32,7 +32,7 @@ func largestSquareAt(f *Field, px, py int) SimpleSquare {
 	ii := 1
 	xCandidates := sl.NewStack()
 	//log.Printf("Walking horizontally looking for possible side lengths")
-	for f.Get(px+ii, py) == 1 && px+ii <f.XDim {
+	for px+ii <f.XDim && f.Get(px+ii, py) == 1 && py+1 < f.YDim{
 		if f.Get(px+ii, py+1) == 1 {
 			xCandidates.Push(ii)
 		}
@@ -42,7 +42,7 @@ func largestSquareAt(f *Field, px, py int) SimpleSquare {
 	ii = 1
 	//log.Printf("Walking vertically looking for possible side lengths")
 	yCandidates := sl.NewStack()
-	for f.Get(px, py+ii) == 1 && py+ii < f.YDim {
+	for py+ii < f.YDim && f.Get(px, py+ii) == 1 && px+1 < f.XDim{
 		if f.Get(px+1, py+ii) == 1 {
 			yCandidates.Push(ii)
 		}

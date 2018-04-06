@@ -25,3 +25,17 @@ func TestBruteSingle(t *testing.T) {
 		t.Fatalf("Failed to find the expected square at 1,1 side=5")
 	}
 }
+
+func TestBruteAbutEnd(t *testing.T) {
+	input := NewField(10,10, 0)
+	input.PutSquare(5,5, 5, 1)
+	//fmt.Print(input.Stringify())
+	max := Brute(&input)
+	if max == nil {
+		t.Fatalf("Should have found a square")
+	}
+	//fmt.Printf("%v\n", max)
+	if max.Side != 5 || max.X != 5 || max.Y != 5 {
+		t.Fatalf("Failed to find the expected square at 5,5 side=5")
+	}
+}
