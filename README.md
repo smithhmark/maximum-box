@@ -9,14 +9,14 @@ The initial version of this challenge would be to assume that all squares are al
 An interesting extension is to allow the sides to be at multiple angles.
 
 ## Approaches
-### Initial
+### Clever
 I plan on tackling this in (at least conceptual) stages.
  1. Using a line-sweep to find line segments
  1. Use a segment intersection to find corners.
  1. assemble rectangles out of doubly intersecting corners
  1. filter out none-squares
  1. find the largest square
-### Secondary
+### Brute Force
 In the case where squares are aligned with the grid, one could:
  1. iterate through the entire grid looking for "on" pixels, call this P
  1. On pixels are potentially the first (eg upper left corner) pixel in a square so:
