@@ -27,4 +27,6 @@ In the case where squares are aligned with the grid, one could:
        1. search right from the (Px, Py+O) for O "on" pixels
        1. if both of the above exist, then we have found the largest square with key corner P, save P and O, possibly in a max heap, or just keep them if O is larger than previous max
        1. break out of inner most loop(over the intersections of left and right notes.
-       
+#### Optimizations
+the scan through all pixels could use the current max Square to terminate sweeps early: if the currentMax.Side > XDim - px, don't bother checking if there is a square, and just jump forward to the next row.
+Similarly, if the currentMax.Side > YDim - py, just stop and return currentMax. 
