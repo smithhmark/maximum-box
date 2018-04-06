@@ -32,4 +32,4 @@ In the case where squares are aligned with the grid, one could:
    - if the currentMax.Side > XDim - px, don't bother checking if there is a square, and just jump forward to the next row.
    - Similarly, if the currentMax.Side > YDim - py, just stop and return currentMax. 
  * when sweeping out from P, there is no reason to continue sweeping out in the second dimention once the first off cell is found
- 
+ * could pass the current max down to where we identify candidates, and refuse to evalulate any with side < maxSquare.Side 
