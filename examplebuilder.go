@@ -1,6 +1,8 @@
 package main
 
 import "log"
+import "bytes"
+//import "fmt"
 
 var EXAMPLE1 = [][]uint8{
 	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
@@ -75,3 +77,18 @@ func (f *Field) PutSquare(x,y, side int, fill uint8) {
 	}
 }
 
+func (f *Field) Stringify() string {
+	var buffer bytes.Buffer
+
+	for row := 0 ; row < f.YDim ; row++ {
+		for col := 0 ; col < f.XDim ; col++ {
+			if f.Field[row][col] == 0 {
+				buffer.WriteString("0")
+			} else {
+				buffer.WriteString("1")
+			}
+		}
+		buffer.WriteString("\n")
+	}
+	return buffer.String()
+}
