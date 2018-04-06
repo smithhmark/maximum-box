@@ -2,7 +2,7 @@ package main
 
 import "log"
 import "bytes"
-//import "fmt"
+import "fmt"
 
 var EXAMPLE1 = [][]uint8{
 	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
@@ -53,7 +53,8 @@ func (f *Field) Set(x, y int, v uint8) {
 }
 
 func (f *Field) Get(x, y int) (v uint8) {
-	if x > f.XDim || y > f.YDim {
+	if x >= f.XDim || y >= f.YDim {
+		panic(fmt.Sprintf("Trying to Get at (%d,%d) when bounds <%d,%d>", x,y, f.XDim, f.YDim))
 		return // error
 	}
 	v = f.Field[y][x]
