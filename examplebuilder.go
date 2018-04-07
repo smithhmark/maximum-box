@@ -28,6 +28,9 @@ var EXAMPLE1 = [][]uint8{
 	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
 }
 
+type SimpleSquare struct {
+	X,Y, Side int
+}
 
 type Field struct {
 	XDim, YDim int
@@ -59,6 +62,10 @@ func (f *Field) Get(x, y int) (v uint8) {
 	}
 	v = f.Field[y][x]
 	return
+}
+
+func (f *Field) PutSSquare(s SimpleSquare, fill uint8) {
+	f.PutSquare(s.X, s.Y, s.Side, fill)
 }
 
 func (f *Field) PutSquare(x,y, side int, fill uint8) {

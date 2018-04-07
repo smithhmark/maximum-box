@@ -3,10 +3,6 @@ package main
 import sl "github.com/smithhmark/gomnibus/singlelink"
 //import "log"
 
-type SimpleSquare struct {
-	X,Y, Side int
-}
-	
 func Brute(f *Field) *SimpleSquare {
 	var maxS *SimpleSquare
 	for Py := 0 ; Py < f.YDim ; Py++ {
