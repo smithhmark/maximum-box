@@ -87,6 +87,28 @@ func (f *Field) PutSquare(x,y, side int, fill uint8) {
 	}
 }
 
+func (f *Field) CheckSSquare(ss *SimpleSquare, fill uint8) bool {
+	for ii := 0 ; ii < ss.Side ; ii++ {
+		if  x, y := ss.X+ii, ss.Y;f.Get(x,y) != fill {
+			log.Printf("CheckSSquare %v failed @(%d,%d)", *ss, x,y) 
+			return false
+		}
+		if x, y := ss.X+ii, ss.Y + ss.Side - 1; f.Get(x,y) != fill {
+			log.Printf("CheckSSquare %v failed @(%d,%d)", *ss, x,y) 
+			return false
+		}
+		if x, y := ss.X, ss.Y+ii; f.Get(x,y) != fill {
+			log.Printf("CheckSSquare %v failed @(%d,%d)", *ss, x,y) 
+			return false
+		}
+		if x, y := ss.X+ss.Side-1, ss.Y+ii; f.Get(x,y) != fill {
+			log.Printf("CheckSSquare %v failed @(%d,%d)", *ss, x,y) 
+			return false
+		}
+	}
+	return true
+}
+
 func (f *Field) Stringify() string {
 	var buffer bytes.Buffer
 
@@ -101,4 +123,26 @@ func (f *Field) Stringify() string {
 		buffer.WriteString("\n")
 	}
 	return buffer.String()
+}
+
+
+func Concentric(f *Field, num int) {
+	var offset int
+
+	centerX := f.XDim / 2
+	centerY := f.YDim / 2
+
+	if f.XDim < f.YDim {
+		offset = f.XDim / ((1+num) *2)
+	} else {
+		offset = f.YDim / ((1+num) *2)
+	}
+
+	for ii := 1 ; ii <= num ; ii++ {
+		x := centerX - offset * ii
+		y := centerY - offset * ii
+		sq := SimpleSquare{x,y, 2*offset*ii}
+		log.Printf("concentric sq:%d at %v", ii, sq)
+		f.PutSSquare(&sq, 1)
+	}
 }

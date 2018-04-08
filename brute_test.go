@@ -58,7 +58,7 @@ func TestBruteIntersecting(t *testing.T) {
 	}
 }
 
-func TestConcentric(t *testing.T) {
+func TestConcentricSquares(t *testing.T) {
 	f := NewField(100,100, 0)
 	big := SimpleSquare{ 10,10, 80}
 	small := SimpleSquare{20,20, 60}

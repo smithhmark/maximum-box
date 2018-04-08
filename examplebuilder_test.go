@@ -47,5 +47,30 @@ func TestSquare(t *testing.T) {
 			}
 		}
 	}
+	if g.CheckSSquare(&s, 1) != true {
+		t.Fatalf("CheckSSquare failed to find what we know is there")
+	}
 }
 
+func TestConcentric(t *testing.T) {
+	f := NewField(100, 100, 0)
+	sq1 := SimpleSquare{10,10, 80}
+	sq2 := SimpleSquare{20,20, 60}
+	sq3 := SimpleSquare{30,30, 40}
+	sq4 := SimpleSquare{40,40, 20}
+
+	Concentric(&f, 4)
+
+	if !f.CheckSSquare(&sq1, 1) {
+		t.Fatalf("Concentric didn't place %v", sq1)
+	}
+	if !f.CheckSSquare(&sq2, 1) {
+		t.Fatalf("Concentric didn't place %v", sq2)
+	}
+	if !f.CheckSSquare(&sq3, 1) {
+		t.Fatalf("Concentric didn't place %v", sq3)
+	}
+	if !f.CheckSSquare(&sq4, 1) {
+		t.Fatalf("Concentric didn't place %v", sq4)
+	}
+}
