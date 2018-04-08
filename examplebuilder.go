@@ -35,7 +35,9 @@ type SimpleSquare struct {
 type Field struct {
 	XDim, YDim int
 	Field [][]uint8
+	Fill uint8
 }
+
 func NewField(xdim, ydim int, fill uint8) Field {
 	f := make([][]uint8, ydim)
 	for row := 0 ; row < ydim ; row++ {
@@ -44,7 +46,7 @@ func NewField(xdim, ydim int, fill uint8) Field {
 			f[row][ii] = fill
 		}
 	}
-	return Field{xdim, ydim, f}
+	return Field{xdim, ydim, f, fill}
 }
 
 func (f *Field) Set(x, y int, v uint8) {
