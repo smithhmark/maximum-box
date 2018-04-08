@@ -58,3 +58,16 @@ func TestBruteIntersecting(t *testing.T) {
 	}
 }
 
+func TestConcentric(t *testing.T) {
+	f := NewField(100,100, 0)
+	big := SimpleSquare{ 10,10, 80}
+	small := SimpleSquare{20,20, 60}
+	f.PutSSquare(&big, 1)
+	f.PutSSquare(&small, 1)
+
+	sq := Brute(&f)
+
+	if *sq != big {
+		t.Fatalf("Should have found %v", big)
+	}
+}

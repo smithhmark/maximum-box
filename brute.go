@@ -12,11 +12,11 @@ func Brute(f *Field) *SimpleSquare {
 				//log.Printf("found possible box start at (%d,%d)", Px, Py)
 				largestS := largestSquareAt(f, Px,Py)
 				if largestS.Side > 0 {
-					if maxS != nil && largestS.Side > maxS.Side {
+					if maxS == nil {
 						maxS = &largestS
-					} else {
+					} else if largestS.Side > maxS.Side {
 						maxS = &largestS
-					}
+					} 
 				}
 			}
 		}
