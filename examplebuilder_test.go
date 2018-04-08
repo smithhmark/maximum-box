@@ -39,7 +39,7 @@ func TestSquare(t *testing.T) {
 
 	g := NewField(5,6, 0)
 	s := SimpleSquare{0,0, 5}
-	g.PutSSquare(s, 1)
+	g.PutSSquare(&s, 1)
 	for row := 0; row < g.YDim ; row++ {
 		for col := 0 ; col < g.XDim ; col++ {
 			if f.Field[row][col] != g.Field[row][col] {

@@ -15,7 +15,7 @@ func TestBruteEmpty(t *testing.T) {
 func TestBruteSingle(t *testing.T) {
 	input := NewField(10,10, 0)
 	sq := SimpleSquare{1,1,5}
-	input.PutSSquare(sq, 1)
+	input.PutSSquare(&sq, 1)
 	//fmt.Print(input.Stringify())
 	max := Brute(&input)
 	if max == nil {
@@ -45,8 +45,8 @@ func TestBruteIntersecting(t *testing.T) {
 	input := NewField(10,10, 0)
 	small := SimpleSquare{1,1, 5}
 	large := SimpleSquare{3,3, 6}
-	input.PutSSquare(small, 1)
-	input.PutSSquare(large, 1)
+	input.PutSSquare(&small, 1)
+	input.PutSSquare(&large, 1)
 	//fmt.Print(input.Stringify())
 	max := Brute(&input)
 	if max == nil {

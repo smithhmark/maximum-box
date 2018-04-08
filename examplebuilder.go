@@ -66,7 +66,7 @@ func (f *Field) Get(x, y int) (v uint8) {
 	return
 }
 
-func (f *Field) PutSSquare(s SimpleSquare, fill uint8) {
+func (f *Field) PutSSquare(s *SimpleSquare, fill uint8) {
 	f.PutSquare(s.X, s.Y, s.Side, fill)
 }
 
