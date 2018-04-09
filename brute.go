@@ -1,15 +1,84 @@
 package main
 
-import sl "github.com/smithhmark/gomnibus/singlelink"
-//import "log"
+import (
+	sl "github.com/smithhmark/gomnibus/singlelink"
+	"container/heap"
+	//"log"
+	//"fmt"
+)
+
+type OrderedSquares []*SimpleSquare;
+
+func (h OrderedSquares) Len() int {
+	return len(h)
+}
+func (h OrderedSquares) Less(i, j int) bool {
+	return h[i].Side < h[j].Side
+}
+func (h OrderedSquares) Swap(i, j int) {
+	h[i], h[j] = h[j], h[i]
+}
+func (h *OrderedSquares) Push(x interface{}) {
+	*h = append(*h, x.(*SimpleSquare))
+}
+func (h *OrderedSquares) Pop() interface{} {
+	old := *h
+	n := len(old) -1
+	x := old[n]
+	*h = old[:n]
+	return x
+}
+
+func addSquare(h *OrderedSquares, sqr *SimpleSquare, n int) {
+	if sqr.Side > 0 {
+		if h.Len() > 0 {
+			//log.Printf("found valid square:%v", *sqr)
+			minOfMax := (*h)[0]
+			if h.Len() < n {
+				//log.Printf("\tnot yet up to N")
+				heap.Push(h, sqr)
+			} else if sqr.Side > minOfMax.Side {
+				//log.Printf("\tlarger than Nth:%v", *(*h)[0])
+				heap.Pop(h)
+				heap.Push(h, sqr)
+			//} else {
+				//log.Printf("\tNot big enough")
+			}
+		} else {
+			//log.Printf("found First valid square:%v", *sqr)
+			heap.Push(h, sqr)
+		}
+	}
+}
+
+func BruteN(f *Field, n int) []*SimpleSquare {
+	maxSqs := make(OrderedSquares, 0, n)
+	heap.Init(&maxSqs)
+	for Py := 0 ; Py < f.YDim ; Py++ {
+		for Px := 0 ; Px < f.YDim ; Px++ {
+			if f.Get(Px, Py) == 1 {
+				largestS := largestSquareAt(f, Px,Py)
+				addSquare(&maxSqs, &largestS, n)
+			}
+		}
+	}
+
+	ret := make([]*SimpleSquare, maxSqs.Len())
+	idx := maxSqs.Len() - 1
+	for maxSqs.Len() > 0 {
+		tmp := heap.Pop(&maxSqs).(*SimpleSquare)
+		ret[idx] =  tmp
+		//fmt.Printf("Popped:%v, placed at:%d\n", tmp, idx)
+		idx--
+	}
+	return ret
+}
 
 func Brute(f *Field) *SimpleSquare {
 	var maxS *SimpleSquare
 	for Py := 0 ; Py < f.YDim ; Py++ {
-		//log.Printf("beginning row:%v", Py)
 		for Px := 0 ; Px < f.YDim ; Px++ {
 			if f.Get(Px, Py) == 1 {
-				//log.Printf("found possible box start at (%d,%d)", Px, Py)
 				largestS := largestSquareAt(f, Px,Py)
 				if largestS.Side > 0 {
 					if maxS == nil {

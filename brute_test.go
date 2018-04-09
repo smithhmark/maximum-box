@@ -3,6 +3,8 @@ package main
 import "testing"
 //import "fmt"
 
+import "container/heap"
+
 func TestBruteEmpty(t *testing.T) {
 	input := NewField(10,10, 0)
 
@@ -71,3 +73,125 @@ func TestConcentricSquares(t *testing.T) {
 		t.Fatalf("Should have found %v", big)
 	}
 }
+
+func noTestBruteN1(t *testing.T) {
+	input := NewField(10,10, 0)
+	small := SimpleSquare{1,1, 5}
+	large := SimpleSquare{3,3, 6}
+	input.PutSSquare(&small, 1)
+	input.PutSSquare(&large, 1)
+
+	res := BruteN(&input, 1)
+	if len(res) != 1 || *res[0] != large {
+		t.Fatalf("failed to find largest square")
+	}
+}
+
+func TestHeap2ItemsInOrder(t *testing.T) {
+	h := make(OrderedSquares, 0, 2)
+	small := SimpleSquare{1,1, 5}
+	large := SimpleSquare{3,3, 6}
+	heap.Push(&h, &small)
+	heap.Push(&h, &large)
+
+	tmp := heap.Pop(&h).(*SimpleSquare)
+	if *tmp != small {
+		t.Fatalf("First pop'ed item should be %v, got %v", small, tmp)
+	}
+	tmp = heap.Pop(&h).(*SimpleSquare)
+	if *tmp != large {
+		t.Fatalf("Second pop'ed item should be %v, got %v", large, tmp)
+	}
+}
+
+func TestHeap(t *testing.T) {
+	h := make(OrderedSquares, 0, 5)
+
+	if cap(h) != 5 || len(h) != 0 {
+		t.Fatalf("Failed to build heap correctly")
+	}
+
+	tiny := SimpleSquare{2,2, 3}
+	small := SimpleSquare{1,1, 5}
+	medium := SimpleSquare{3,3, 6}
+	large := SimpleSquare{4,4, 10}
+
+	heap.Push(&h, &large)
+	if cap(h) != 5 || len(h) != 1 {
+		t.Fatalf("Failed to build heap.Push correctly")
+	}
+	if *h[0] != large {
+		t.Fatalf("Min item in heap should be %v", large)
+	}
+
+	heap.Push(&h, &small)
+	if *h[0] != small {
+		t.Fatalf("Min item in heap should be %v", small)
+	}
+
+	heap.Push(&h, &medium)
+	if *h[0] != small {
+		t.Fatalf("Min item in heap should be %v", small)
+	}
+	heap.Push(&h, &tiny)
+	if *h[0] != tiny {
+		t.Fatalf("Min item in heap should be %v", tiny)
+	}
+
+	tmp := heap.Pop(&h).(*SimpleSquare)
+	if *tmp != tiny {
+		t.Fatalf("First pop'ed item should be %v, got %v", tiny, tmp)
+	}
+	tmp = heap.Pop(&h).(*SimpleSquare)
+	if *tmp != small {
+		t.Fatalf("Second pop'ed item should be %v, got %v", small, tmp)
+	}
+	tmp = heap.Pop(&h).(*SimpleSquare)
+	if *tmp != medium {
+		t.Fatalf("Third pop'ed item should be %v, got %v", medium, tmp)
+	}
+	tmp = heap.Pop(&h).(*SimpleSquare)
+	if *tmp != large {
+		t.Fatalf("Forth pop'ed item should be %v, got %v", large, tmp)
+	}
+}
+
+func TestBruteN2(t *testing.T) {
+	input := NewField(10,10, 0)
+	small := SimpleSquare{1,1, 5}
+	large := SimpleSquare{3,3, 6}
+	input.PutSSquare(&small, 1)
+	input.PutSSquare(&large, 1)
+
+	res := BruteN(&input, 2)
+	if len(res) != 2 {
+		t.Fatalf("expected to find two squares")
+	}
+	if *res[0] != large {
+		//for _, v := range res {
+		//	fmt.Printf("growl:%v\n", *v)
+		//}
+		t.Fatalf("failed to find %v, instead:%v", large, *res[0])
+	}
+	if *res[1] != small {
+		t.Fatalf("failed to find %v, instead:%v", small, *res[1])
+	}
+}
+
+func TestBruteNSpectrum(t *testing.T) {
+	f := NewField(1000,1000, 0)
+	DecreasingSpectrum(&f, 8, 300, 50)
+
+	sqs := BruteN(&f, 5)
+
+	if len(sqs) != 5 {
+		
+		t.Fatalf("Didn't find all the squares, found:%v", sqs)
+	}
+	for ii, vv := range sqs {
+		if ii > 0 && vv.Side < sqs[0].Side {
+			t.Fatalf("heap property violated at %v, v=%v", ii, vv)
+		}
+	}
+}
+
