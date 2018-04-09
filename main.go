@@ -154,11 +154,17 @@ func main() {
 	//Concentric(&f, 4)
 	DecreasingSpectrum(&f, 8, 300, 50)
 
-	sq := Brute(&f)
-	log.Printf("Found: %v", *sq)
+	sqs := BruteN(&f,len(colors))
+	//sqs := BruteN(&f,5)
+	log.Printf("Found: %d", len(sqs))
+	for _, vv := range sqs {
+		log.Printf("\t%v", vv)
+	}
 
 	sf := makeStandardizedField(&f)
-	highlightSquare(&sf, sq, 0)
+	for ii, vv := range sqs {
+		highlightSquare(&sf, vv, ii)
+	}
 
 	makeImageFile(&sf, "test.png")
 }
