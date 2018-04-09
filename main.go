@@ -148,9 +148,11 @@ func highlightSquare(f *Field, ss *SimpleSquare, ith int) {
 }
 
 func main() {
-	f := NewField(100,100, 0)
-	f.PutSquare( 10,10, 80, 1)
-	f.PutSquare( 20,20, 60, 1)
+	f := NewField(1000,1000, 0)
+	//f.PutSquare( 10,10, 80, 1)
+	//f.PutSquare( 20,20, 60, 1)
+	//Concentric(&f, 4)
+	DecreasingSpectrum(&f, 8, 300, 50)
 
 	sq := Brute(&f)
 	log.Printf("Found: %v", *sq)

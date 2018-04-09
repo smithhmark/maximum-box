@@ -146,3 +146,33 @@ func Concentric(f *Field, num int) {
 		f.PutSSquare(&sq, 1)
 	}
 }
+
+func DecreasingSpectrum(f *Field, num, largest, smallest int) {
+	centerXs := make([]int,num)
+	xOffset := f.XDim /(num +1)
+	centerYs := make([]int,num)
+	yOffset := f.YDim /(num +1)
+	for ii := 1 ; ii <= num ; ii++ {
+		centerXs[ii-1] = xOffset*ii
+		centerYs[ii-1] = yOffset*ii
+	}
+
+	sizeStep := (largest - smallest) /num
+	for ii := 0 ; ii < num ; ii++ {
+		sqSz := largest - sizeStep*ii
+		x := centerXs[ii] - sqSz /2
+		y := centerYs[ii] - sqSz /2
+		if x < 0 {
+			sqSz += x*2
+			x = centerXs[ii] - sqSz /2
+			y = centerYs[ii] - sqSz /2
+		}
+		if y < 0 {
+			sqSz += y*2
+			x = centerXs[ii] - sqSz /2
+			y = centerYs[ii] - sqSz /2
+		}
+		log.Printf("DecreasingSpectrum placing sq:{%d, %d, %d}", x,y,sqSz)
+		f.PutSquare(x,y,sqSz, 1)
+	}
+}
