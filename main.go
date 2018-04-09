@@ -6,6 +6,8 @@ import (
 	"image/color"
 	"os"
 	"log"
+	"flag"
+	"fmt"
 )
 
 var colors = []color.Color {
@@ -148,23 +150,44 @@ func highlightSquare(f *Field, ss *SimpleSquare, ith int) {
 }
 
 func main() {
-	f := NewField(1000,1000, 0)
+	var width = flag.Int("width", 1024, "the width of the field")
+	var height = flag.Int("height", 1024, "the height of the field")
+	var pattern = flag.String("pattern", "DS", "Pattern {DS (DecreasingSpectrum) | C (Concentric) }")
+	var largest = flag.Int("largest", 512, "side length of largest square in pattern")
+	var smallest = flag.Int("smallest", 32, "side length of smallest square in pattern")
+	var number = flag.Int("number", 10, "number of squares to put into the pattern")
+	var opath = flag.String("path", "image.png", "path to place output image")
+	var output = flag.String("output", "image", "Outout {image | text}")
+
+	flag.Parse()
+
+	f := NewField(*width,*height, 0)
 	//f.PutSquare( 10,10, 80, 1)
 	//f.PutSquare( 20,20, 60, 1)
-	//Concentric(&f, 4)
-	DecreasingSpectrum(&f, 8, 300, 50)
+	switch *pattern {
+	case "DS" :
+		DecreasingSpectrum(&f, *number, *largest, *smallest)
+	case "C":
+		Concentric(&f, *number)
+	default:
+		Concentric(&f, 40)
+	}
 
 	sqs := BruteN(&f,len(colors))
 	//sqs := BruteN(&f,5)
-	log.Printf("Found: %d", len(sqs))
-	for _, vv := range sqs {
-		log.Printf("\t%v", vv)
+	switch *output {
+	case "text":
+		fmt.Printf("Found: %d", len(sqs))
+		fmt.Printf("\tX\tY\tSide\n")
+		for _, vv := range sqs {
+			fmt.Printf("\t%d\t%d\t%d\n", vv.X, vv.Y, vv.Side)
+		}
+	case "image":
+		sf := makeStandardizedField(&f)
+		for ii, vv := range sqs {
+			highlightSquare(&sf, vv, ii)
+		}
+		makeImageFile(&sf, *opath)
 	}
 
-	sf := makeStandardizedField(&f)
-	for ii, vv := range sqs {
-		highlightSquare(&sf, vv, ii)
-	}
-
-	makeImageFile(&sf, "test.png")
 }
