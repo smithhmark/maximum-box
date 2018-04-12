@@ -152,7 +152,7 @@ func highlightSquare(f *Field, ss *SimpleSquare, ith int) {
 func main() {
 	var width = flag.Int("width", 1024, "the width of the field")
 	var height = flag.Int("height", 1024, "the height of the field")
-	var pattern = flag.String("pattern", "DS", "Pattern {DS (DecreasingSpectrum) | C (Concentric) }")
+	var pattern = flag.String("pattern", "DS", "Pattern {DS (DecreasingSpectrum) | C (Concentric) | R (Random)}")
 	var largest = flag.Int("largest", 512, "side length of largest square in pattern")
 	var smallest = flag.Int("smallest", 32, "side length of smallest square in pattern")
 	var number = flag.Int("number", 10, "number of squares to put into the pattern")
@@ -169,6 +169,10 @@ func main() {
 		DecreasingSpectrum(&f, *number, *largest, *smallest)
 	case "C":
 		Concentric(&f, *number)
+	case "R":
+		for ii := 0; ii < *number; ii++ {
+			f.RandomSquare()
+		}
 	default:
 		Concentric(&f, 40)
 	}

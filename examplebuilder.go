@@ -1,8 +1,11 @@
 package main
 
-import "log"
-import "bytes"
-import "fmt"
+import (
+	"log"
+	"bytes"
+	"fmt"
+	"math/rand"
+)
 
 var EXAMPLE1 = [][]uint8{
 	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
@@ -68,6 +71,20 @@ func (f *Field) Get(x, y int) (v uint8) {
 
 func (f *Field) PutSSquare(s *SimpleSquare, fill uint8) {
 	f.PutSquare(s.X, s.Y, s.Side, fill)
+}
+
+func (f *Field) RandomSquare() {
+	var side int
+	if f.XDim < f.YDim {
+		side = rand.Intn(f.XDim)
+	} else {
+		side = rand.Intn(f.YDim)
+	}
+
+	x := rand.Intn(f.XDim - side)
+	y := rand.Intn(f.YDim - side)
+
+	f.PutSquare(x,y,side, 1)
 }
 
 func (f *Field) PutSquare(x,y, side int, fill uint8) {
