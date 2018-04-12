@@ -73,6 +73,16 @@ func (f *Field) PutSSquare(s *SimpleSquare, fill uint8) {
 	f.PutSquare(s.X, s.Y, s.Side, fill)
 }
 
+func (f *Field) RandomPoints(prob float64) {
+	for row := 0 ; row < f.YDim ; row++ {
+		for col := 0 ; col < f.XDim ; col++ {
+			if rand.Float64() < prob{
+				f.Set(row, col, 1)
+			}
+		}
+	}
+}
+
 func (f *Field) RandomSquare() {
 	var side int
 	if f.XDim < f.YDim {
