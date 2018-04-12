@@ -189,9 +189,55 @@ func TestBruteNSpectrum(t *testing.T) {
 		t.Fatalf("Didn't find all the squares, found:%v", sqs)
 	}
 	for ii, vv := range sqs {
-		if ii > 0 && vv.Side < sqs[0].Side {
+		if ii > 0 && vv.Side > sqs[0].Side {
+			for gg:=0;gg<len(sqs);gg++ {
+				t.Log(sqs[gg])
+			}
 			t.Fatalf("heap property violated at %v, v=%v", ii, vv)
 		}
 	}
 }
 
+var result *SimpleSquare
+
+func benchBruteRandSq(size,number int, b *testing.B){
+	f := NewField(size,size, 0)
+	for ii := 0; ii < number; ii++ {
+		f.RandomSquare()
+	}
+	var r *SimpleSquare
+
+	b.ResetTimer()
+	for ii := 0 ; ii < b.N ; ii++ {
+		r = Brute(&f)
+	}
+	result = r
+}
+func benchBruteRand(size int, prob float64, b *testing.B){
+	f := NewField(size,size, 0)
+	f.RandomPoints(prob)
+	var r *SimpleSquare
+
+	b.ResetTimer()
+	for ii := 0 ; ii < b.N ; ii++ {
+		r = Brute(&f)
+	}
+	result = r
+}
+
+func BenchmarkBruteRandomPts90(b *testing.B) {benchBruteRand(1024,.9,b) }
+func BenchmarkBruteRandomPts88(b *testing.B) {benchBruteRand(1024,.88,b) }
+func BenchmarkBruteRandomPts85(b *testing.B) {benchBruteRand(1024,.85,b) }
+func BenchmarkBruteRandomPts80(b *testing.B) {benchBruteRand(1024,.80,b) }
+
+func BenchmarkBruteRandomPts80_256(b *testing.B) {benchBruteRand(256,.80,b) }
+func BenchmarkBruteRandomPts80_512(b *testing.B) {benchBruteRand(512,.80,b) }
+func BenchmarkBruteRandomPts80_1024(b *testing.B) {benchBruteRand(1024,.80,b) }
+func BenchmarkBruteRandomPts80_2028(b *testing.B) {benchBruteRand(2028,.80,b) }
+
+func BenchmarkBruteRandomSqs80_64(b *testing.B) {benchBruteRand(64,80,b) }
+func BenchmarkBruteRandomSqs80_128(b *testing.B) {benchBruteRand(128,80,b) }
+func BenchmarkBruteRandomSqs80_256(b *testing.B) {benchBruteRand(256,80,b) }
+func BenchmarkBruteRandomSqs80_512(b *testing.B) {benchBruteRand(512,80,b) }
+//func BenchmarkBruteRandomSqs80_1024(b *testing.B) {benchBruteRand(1024,80,b) }
+//func BenchmarkBruteRandomSqs80_2028(b *testing.B) {benchBruteRand(2028,80,b) }
