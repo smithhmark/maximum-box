@@ -95,26 +95,29 @@ func Brute(f *Field) *SimpleSquare {
 
 func largestSquareAt(f *Field, px, py int) SimpleSquare {
 	ii := 1
-	xCandidates := sl.NewStack()
+	xCandidates := make([]int, f.XDim)
+	yCandidates := make([]int, f.YDim)
+	curXCand, curYCand := -1, -1
 	//log.Printf("Walking horizontally looking for possible side lengths")
 	for px+ii <f.XDim && f.Get(px+ii, py) == 1 && py+1 < f.YDim{
 		if f.Get(px+ii, py+1) == 1 {
-			xCandidates.Push(ii)
+			curXCand++
+			xCandidates[curXCand] = ii
 		}
 		ii++
 	}
 
 	ii = 1
 	//log.Printf("Walking vertically looking for possible side lengths")
-	yCandidates := sl.NewStack()
 	for py+ii < f.YDim && f.Get(px, py+ii) == 1 && px+1 < f.XDim{
 		if f.Get(px+1, py+ii) == 1 {
-			yCandidates.Push(ii)
+			curYCand++
+			yCandidates[curYCand] = ii
 		}
 		ii++
 	}
 
-	candidates := intersectCandidates(xCandidates, yCandidates)
+	candidates := intersectCandidates(xCandidates, yCandidates, curXCand, curYCand)
 	//log.Printf("candidate sizes:%v", candidates)
 
 	for _, side := range candidates {
@@ -151,32 +154,27 @@ func pop(s *sl.Stack) int {
 	return tmp.(int)
 }
 
-func intersectCandidates(s1, s2 *sl.Stack) []int {
+func intersectCandidates(s1, s2 []int, cx, cy int) []int {
 	merged := make([]int, 0, 2)
-	if s1.Size() == 0 || s2.Size() == 0 {
+	if cx == -1 || cy == -1 {
 		return merged
 	}
-	v1 := pop(s1)
-	v2 := pop(s2)
 
-	for v1 > 0 && v2 > 0 {
+	var v1 int
+	var v2 int
+	for cx >= 0 && cy >= 0 {
+		v1 = s1[cx]
+		v2 = s2[cy]
 		if v1 > v2 {
-			v1 = pop(s1)
+			cx--
 		} else if v2 > v1 {
-			v2 = pop(s2)
+			cy--
 		} else {
-			if len(merged) == cap(merged) {
-				newmerged := make([]int, len(merged), 2*cap(merged))
-				copy(newmerged, merged)
-				merged = newmerged
-			}
 			merged = append(merged, v1)
-			v1 = pop(s1)
-			v2 = pop(s2)
+			cx--
+			cy--
 		}
 	}
 	return merged
 }
-
-
 
