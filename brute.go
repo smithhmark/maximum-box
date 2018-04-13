@@ -63,7 +63,13 @@ func BruteN(f *Field, n int) []*SimpleSquare {
 		mergedCandidates = make([]int, 0, f.YDim)
 	}
 	for Py := 0 ; Py < f.YDim ; Py++ {
+		if len(maxSqs) > 0 && Py > f.YDim - maxSqs[0].Side {
+			continue
+		}
 		for Px := 0 ; Px < f.YDim ; Px++ {
+			if len(maxSqs) > 0 && Px > f.XDim - maxSqs[0].Side {
+				continue
+			}
 			if f.Get(Px, Py) == 1 {
 				largestS := largestSquareAt(f, Px,Py, xCandidates, yCandidates, mergedCandidates)
 				addSquare(&maxSqs, &largestS, n)
@@ -93,7 +99,13 @@ func Brute(f *Field) *SimpleSquare {
 		mergedCandidates = make([]int, 0, f.YDim)
 	}
 	for Py := 0 ; Py < f.YDim ; Py++ {
+		if maxS != nil && Py > f.YDim - maxS.Side {
+			continue
+		}
 		for Px := 0 ; Px < f.YDim ; Px++ {
+			if maxS != nil && Px > f.XDim - maxS.Side {
+				continue
+			}
 			if f.Get(Px, Py) == 1 {
 				largestS := largestSquareAt(f, Px,Py, xCandidates, yCandidates, mergedCandidates)
 				if largestS.Side > 0 {
