@@ -239,5 +239,6 @@ func BenchmarkBruteRandomSqs80_64(b *testing.B) {benchBruteRand(64,80,b) }
 func BenchmarkBruteRandomSqs80_128(b *testing.B) {benchBruteRand(128,80,b) }
 func BenchmarkBruteRandomSqs80_256(b *testing.B) {benchBruteRand(256,80,b) }
 func BenchmarkBruteRandomSqs80_512(b *testing.B) {benchBruteRand(512,80,b) }
-//func BenchmarkBruteRandomSqs80_1024(b *testing.B) {benchBruteRand(1024,80,b) }
-//func BenchmarkBruteRandomSqs80_2028(b *testing.B) {benchBruteRand(2028,80,b) }
+func BenchmarkBruteRandomSqs80_1024(b *testing.B) {benchBruteRand(1024,80,b) }
+func BenchmarkBruteRandomSqs80_2048(b *testing.B) {benchBruteRand(2048,80,b) }
+func BenchmarkBruteRandomSqs80_4096(b *testing.B) {benchBruteRand(4096,80,b) }
