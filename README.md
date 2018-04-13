@@ -62,3 +62,18 @@ Each doubling of the input size results in approximately an 8X increase in durat
 ### First round
 
 Apparentely, The use of the singly linked list thrashes memory, and so there is a lot of allocation and deallocation. The largest chunk of time in largestSquareAt is spent by Push, and that time comes from allocation new Elements.
+
+#### Results
+By replacing the Stacks with ```[]int```'s and head indices, we go much faster.
+```shell
+ $ go test -bench=Sqs -run=XXX
+goos: darwin
+goarch: amd64
+pkg: github.com/smithhmark/maximum-box
+BenchmarkBruteRandomSqs80_64-4    	     300	   5508764 ns/op
+BenchmarkBruteRandomSqs80_128-4   	      30	  41257432 ns/op
+BenchmarkBruteRandomSqs80_256-4   	       5	 316813011 ns/op
+BenchmarkBruteRandomSqs80_512-4   	       1	2521146902 ns/op
+PASS
+ok  	github.com/smithhmark/maximum-box	8.906s
+```
