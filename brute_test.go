@@ -1,7 +1,7 @@
 package main
 
 import "testing"
-//import "fmt"
+import "fmt"
 
 import "container/heap"
 
@@ -178,6 +178,50 @@ func TestBruteN2(t *testing.T) {
 	}
 }
 
+func printer(d [][]int, trans bool) {
+	if trans {
+		xdim := len(d)
+		ydim := len(d[0])
+		for row := 0 ; row < ydim ; row++ {
+			for col := 0 ; col < xdim ; col++ {
+				fmt.Print(d[col][row])
+			}
+			fmt.Print("\n")
+		}
+	} else {
+		ydim := len(d)
+		xdim := len(d[0])
+		for row := 0 ; row < ydim ; row++ {
+			for col := 0 ; col < xdim ; col++ {
+				fmt.Print(d[row][col])
+			}
+			fmt.Print("\n")
+		}
+	}
+}
+
+func TestCompletions(t *testing.T) {
+	f := NewField(5,5, 0)
+	f.Set(4,0,1)
+	f.Set(3,0,1)
+	f.Set(0,4,1)
+	f.Set(0,3,1)
+
+	horts, verts := completions(&f)
+
+	//fmt.Printf("%v", f.Stringify())
+	//fmt.Printf("verts:\n")
+	//printer(verts, true)
+	//fmt.Printf("horts:\n")
+	//printer(horts, true)
+	if horts[3][0] != 2 && horts[4][0] != 1{
+		t.Fatalf("missed a horizontal run")
+	}
+	if verts[0][3] != 2 && verts[0][4] != 1{
+		t.Fatalf("missed a vertical run")
+	}
+}
+
 func TestBruteNSpectrum(t *testing.T) {
 	f := NewField(1000,1000, 0)
 	DecreasingSpectrum(&f, 8, 300, 50)
@@ -199,6 +243,17 @@ func TestBruteNSpectrum(t *testing.T) {
 }
 
 var result *SimpleSquare
+
+func benchBruteWorst(size int, b *testing.B){
+	f := NewField(size,size, 1)
+	var r *SimpleSquare
+
+	b.ResetTimer()
+	for ii := 0 ; ii < b.N ; ii++ {
+		r = Brute(&f)
+	}
+	result = r
+}
 
 func benchBruteRandSq(size,number int, b *testing.B){
 	f := NewField(size,size, 0)
@@ -235,10 +290,23 @@ func BenchmarkBruteRandomPts80_512(b *testing.B) {benchBruteRand(512,.80,b) }
 func BenchmarkBruteRandomPts80_1024(b *testing.B) {benchBruteRand(1024,.80,b) }
 func BenchmarkBruteRandomPts80_2028(b *testing.B) {benchBruteRand(2028,.80,b) }
 
-func BenchmarkBruteRandomSqs80_64(b *testing.B) {benchBruteRand(64,80,b) }
+//func BenchmarkBruteRandomSqs80_64(b *testing.B) {benchBruteRand(64,80,b) }
 func BenchmarkBruteRandomSqs80_128(b *testing.B) {benchBruteRand(128,80,b) }
 func BenchmarkBruteRandomSqs80_256(b *testing.B) {benchBruteRand(256,80,b) }
 func BenchmarkBruteRandomSqs80_512(b *testing.B) {benchBruteRand(512,80,b) }
 func BenchmarkBruteRandomSqs80_1024(b *testing.B) {benchBruteRand(1024,80,b) }
 func BenchmarkBruteRandomSqs80_2048(b *testing.B) {benchBruteRand(2048,80,b) }
 func BenchmarkBruteRandomSqs80_4096(b *testing.B) {benchBruteRand(4096,80,b) }
+
+//func BenchmarkBruteRandomSqs200_64(b *testing.B) {benchBruteRand(64,200,b) }
+func BenchmarkBruteRandomSqs200_128(b *testing.B) {benchBruteRand(128,200,b) }
+func BenchmarkBruteRandomSqs200_256(b *testing.B) {benchBruteRand(256,200,b) }
+func BenchmarkBruteRandomSqs200_512(b *testing.B) {benchBruteRand(512,200,b) }
+func BenchmarkBruteRandomSqs200_1024(b *testing.B) {benchBruteRand(1024,200,b) }
+func BenchmarkBruteRandomSqs200_2048(b *testing.B) {benchBruteRand(2048,200,b) }
+func BenchmarkBruteRandomSqs200_4096(b *testing.B) {benchBruteRand(4096,200,b) }
+
+func BenchmarkBruteWorst128(b *testing.B) {benchBruteWorst(128,b) }
+func BenchmarkBruteWorst256(b *testing.B) {benchBruteWorst(256,b) }
+func BenchmarkBruteWorst512(b *testing.B) {benchBruteWorst(512,b) }
+func BenchmarkBruteWorst1024(b *testing.B) {benchBruteWorst(1024,b) }
