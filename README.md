@@ -77,3 +77,19 @@ BenchmarkBruteRandomSqs80_512-4   	       1	2521146902 ns/op
 PASS
 ok  	github.com/smithhmark/maximum-box	8.906s
 ```
+
+### Second Round
+the intersection of the xCandidates and the yCandidates was suffering from having to allocate the result slice on each call. By allocating the array in Brute and passing it down through largestSquare and into intersectCandidates saves that. This is safe because largestSquareAt returns a single SimpleSquare, then Brute moves on the to the next living pixel and starts over with the original empty slice.
+
+#### results
+```shell
+enchmarkBruteRandomSqs80_64-4    	     500	   3744995 ns/op
+BenchmarkBruteRandomSqs80_128-4   	      50	  29123256 ns/op
+BenchmarkBruteRandomSqs80_256-4   	       5	 229931562 ns/op
+BenchmarkBruteRandomSqs80_512-4   	       1	1898094511 ns/op
+PASS
+ok  	github.com/smithhmark/maximum-box	7.047s
+```
+
+Now that resources aren't the problem, we can try using some of the optimization strategies above to reduce the number of Get calls and make completesSquare a look up
+

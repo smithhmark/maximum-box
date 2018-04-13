@@ -54,10 +54,18 @@ func addSquare(h *OrderedSquares, sqr *SimpleSquare, n int) {
 func BruteN(f *Field, n int) []*SimpleSquare {
 	maxSqs := make(OrderedSquares, 0, n)
 	heap.Init(&maxSqs)
+	xCandidates := make([]int, f.XDim)
+	yCandidates := make([]int, f.YDim)
+	var mergedCandidates []int
+	if f.XDim > f.YDim {
+		mergedCandidates = make([]int, 0, f.XDim)
+	} else {
+		mergedCandidates = make([]int, 0, f.YDim)
+	}
 	for Py := 0 ; Py < f.YDim ; Py++ {
 		for Px := 0 ; Px < f.YDim ; Px++ {
 			if f.Get(Px, Py) == 1 {
-				largestS := largestSquareAt(f, Px,Py)
+				largestS := largestSquareAt(f, Px,Py, xCandidates, yCandidates, mergedCandidates)
 				addSquare(&maxSqs, &largestS, n)
 			}
 		}
@@ -76,10 +84,18 @@ func BruteN(f *Field, n int) []*SimpleSquare {
 
 func Brute(f *Field) *SimpleSquare {
 	var maxS *SimpleSquare
+	xCandidates := make([]int, f.XDim)
+	yCandidates := make([]int, f.YDim)
+	var mergedCandidates []int
+	if f.XDim > f.YDim {
+		mergedCandidates = make([]int, 0, f.XDim)
+	} else {
+		mergedCandidates = make([]int, 0, f.YDim)
+	}
 	for Py := 0 ; Py < f.YDim ; Py++ {
 		for Px := 0 ; Px < f.YDim ; Px++ {
 			if f.Get(Px, Py) == 1 {
-				largestS := largestSquareAt(f, Px,Py)
+				largestS := largestSquareAt(f, Px,Py, xCandidates, yCandidates, mergedCandidates)
 				if largestS.Side > 0 {
 					if maxS == nil {
 						maxS = &largestS
@@ -93,10 +109,8 @@ func Brute(f *Field) *SimpleSquare {
 	return maxS
 }
 
-func largestSquareAt(f *Field, px, py int) SimpleSquare {
+func largestSquareAt(f *Field, px, py int, xCandidates, yCandidates, mergedCandidates []int) SimpleSquare {
 	ii := 1
-	xCandidates := make([]int, f.XDim)
-	yCandidates := make([]int, f.YDim)
 	curXCand, curYCand := -1, -1
 	//log.Printf("Walking horizontally looking for possible side lengths")
 	for px+ii <f.XDim && f.Get(px+ii, py) == 1 && py+1 < f.YDim{
@@ -117,7 +131,7 @@ func largestSquareAt(f *Field, px, py int) SimpleSquare {
 		ii++
 	}
 
-	candidates := intersectCandidates(xCandidates, yCandidates, curXCand, curYCand)
+	candidates := intersectCandidates(xCandidates, yCandidates, curXCand, curYCand, mergedCandidates)
 	//log.Printf("candidate sizes:%v", candidates)
 
 	for _, side := range candidates {
@@ -154,8 +168,14 @@ func pop(s *sl.Stack) int {
 	return tmp.(int)
 }
 
-func intersectCandidates(s1, s2 []int, cx, cy int) []int {
-	merged := make([]int, 0, 2)
+func intersectCandidates(s1, s2 []int, cx, cy int, merged []int) []int {
+	/*var merged []int
+	if len(s1) > len(s2) {
+		merged = make([]int, 0, len(s1))
+	}else {
+		merged = make([]int, 0, len(s1))
+	}
+	*/
 	if cx == -1 || cy == -1 {
 		return merged
 	}
